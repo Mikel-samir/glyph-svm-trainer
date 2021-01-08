@@ -1,7 +1,6 @@
 #import lazyImage
 import lazyDataset
-ds=lazyDataset.lazyDataset()
-#(path="../../DataSet/EgyptianHieroglyphDataset/Automated/Preprocessed/")
+ds=lazyDataset.lazyDataset(path="../../DataSet/EgyptianHieroglyphDataset/Automated/Preprocessed/",save_path="./data/random.pkl",lazy=False)
 result=ds.load()
 try :
  X,y=result
