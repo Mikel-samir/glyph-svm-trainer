@@ -3,6 +3,10 @@ author : Michael
 
 """
 from utils import D;
+#~import os
+#~import re
+#~from imageio import imread, imsave
+
 #TODO impelement lazyness level to control processing
 #TODO? write method 'die' to write label to self.label then clear the path 
 #TODO write static method to read list of lazyImages and return (labels, feature vectors )
@@ -10,8 +14,9 @@ from utils import D;
 class Image(object):
     """lazy images
     """
-    def __init__(self, path,lazyness=50):
+    def __init__(self, path,lazyness=50,labeled_folders=False):
         self.path=path;
+        self.labeled_folders=labeled_folders;
         self.process();
 #        self.label=self.getlabel()
 
@@ -21,7 +26,14 @@ class Image(object):
         from imageio import imread, imsave
         image=imread(self.path);
         return image;
-    
+
+    def get_folder_name (self,fpath):# needs refactoring
+        import os 
+        a=os.path.realpath(fpath)
+        b=os.path.dirname(a)
+        return os.path.basename(b)
+
+
     def label(self):
         """ get the label from the filename. 
             of pattern blabla_label.bla
@@ -29,10 +41,17 @@ class Image(object):
         # read path
         # get filename
         import os
-        fn = os.path.basename(self.path)
+        file_name   = os.path.basename(self.path)
+        folder_name = self.get_folder_name(self.path)
         # select .*_(.*)\..*
         import re;
-        return re.match(r'.*_(.*)\..*',fn).group(1)
+        match=re.match(r'.*_(.*)\..*',file_name)
+        if ( self.labeled_folders == True ) :
+            return folder_name;
+        elif (match == None):
+            return folder_name;
+        else :
+            return match.group(1);
 
     def process(self):
         """process image with canny edge & hog
@@ -61,7 +80,10 @@ class Image(object):
         hog_patch_ratio=(hpr,hpr)
         PPS=D(image.shape,hog_patch_ratio)
         cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches
-        fv = hog(image,orientations=bins,cells_per_block=cells_per_block, pixels_per_cell=PPS ,block_norm='L1',transform_sqrt=True)
+        fv = hog(image,
+                orientations=bins,cells_per_block=cells_per_block
+                ,pixels_per_cell=PPS ,block_norm='L1'
+                ,transform_sqrt=True)
         self.fv=fv;
         del image;
     @staticmethod    
