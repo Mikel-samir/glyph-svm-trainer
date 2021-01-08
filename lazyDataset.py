@@ -9,9 +9,10 @@ class lazyDataset(object):
     """
     def __init__(self
             ,path = "/home/loxymondor/docs/facu/Gproj/Proj/DataSet/EgyptianHieroglyphDataset/ExampleSet7/train/"
-            ,seprator="/" # Warning os dependent
+            ,seprator=os.path.sep 
             ,labeled=False
-            ,lazy=True,save_path="./data/lazyDataset.ss"):
+            ,lazy=True
+            ,dump=True,save_path="./data/lazyDataset.pkl"):
         """ __init__ (path,seprator)
         this method assumes that each folder name is the lable of the images it contains.
         path : is dir of dataset
@@ -34,6 +35,7 @@ class lazyDataset(object):
         self.path=path
         self.seprator=seprator
         self.lazy=lazy
+        self.dump=dump
         self.save_path=save_path
         self.images=[]
 
@@ -42,9 +44,10 @@ class lazyDataset(object):
             self.__lazy_load__()
         else :
             self.__strict_load__()
-        self.__dump__()
+        if self.dump == True :
+            self.__dump__()
         return self.images
-
+    
     def __dump__(self):
         pickle.dump(self.images,open(self.save_path, 'wb'))
 
@@ -69,6 +72,3 @@ class lazyDataset(object):
                             +label+self.seprator+img))
         self.images=li.Image.toXy(images)
 
-#        images=pickle.load( open("./data/lazyDataset.ss", 'rb'))
-#           pickle.dump(images, open(save_dir, 'wb'))
-#        if save_dir != "" :
