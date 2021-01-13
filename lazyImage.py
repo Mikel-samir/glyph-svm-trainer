@@ -14,9 +14,11 @@ from utils import D;
 class Image(object):
     """lazy images
     """
-    def __init__(self, path,lazyness=50,labeled_folders=False):
+    def __init__(self, path,lazyness=50
+            ,labeled_folders=False, func=lambda x : x ):
         self.path=path;
         self.labeled_folders=labeled_folders;
+        self.preprocess=func
         self.process();
 #        self.label=self.getlabel()
 
@@ -59,7 +61,9 @@ class Image(object):
         """
         #init 
         image = self.load();
-        
+
+        # preprocess
+#        image = self.preprocess(image);
         # to gray ## move to seperate method
         from PIL import Image, ImageEnhance
         from skimage.color import rgb2gray
