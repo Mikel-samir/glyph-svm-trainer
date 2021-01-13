@@ -1,9 +1,9 @@
 #import lazyImage
 import lazyDataset
-ds=lazyDataset.lazyDataset(path="../../DataSet/EgyptianHieroglyphDataset/Automated/Preprocessed/",save_path="./data/random.pkl",lazy=False)
+#ds=lazyDataset.lazyDataset(path="../../DataSet/EgyptianHieroglyphDataset/Automated/Preprocessed/",save_path="./data/random.pkl",lazy=False)
+ds=lazyDataset.lazyDataset(
+        save_path="./data/random.pkl",
+        lazy=True,dump=False)
 result=ds.load()
-try :
- X,y=result
- print ("Done ! :)\n"+str(len(X))+"\t"+str(len(y))+"\nlabels: \n"+str(set(y)))
-except:
-    print (str(type(result)))
+lazyDataset.summary(result);
+s=ds+ds

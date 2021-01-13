@@ -2,8 +2,13 @@ import os
 import lazyImage as li
 import pickle
 
-#TODO : make load more os independent 
-#TODO turn this to class with : dump , smart_load
+#DONE : make load more os independent 
+#DONE : turn this to class with : dump , smart_load
+#TODO : update docmuentaion
+#TODO : add drop to drop lables and there data 
+#       in __strict_load__ and __lazy_load__
+#TODO : overload + 
+
 class lazyDataset(object):
     """ lazy reading of dataset set
     """
@@ -71,4 +76,15 @@ class lazyDataset(object):
                              self.path+self.seprator
                             +label+self.seprator+img))
         self.images=li.Image.toXy(images)
-
+    def __add__(self,other):
+        print("not implemented yet !")
+def summary(Xs_ys):
+    try :
+      X,y=Xs_ys
+      y_=set(y)
+      print ( "Summary :\n"
+                  +"data : "+str(len(X))
+              +"\t labels: "+str(len(y))
+              +"\nuniqe labels: "+str(len(y_))+" \n"+str(y_))
+    except:
+        print ("error input of type : "+str(type(result)))
