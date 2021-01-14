@@ -88,3 +88,21 @@ def summary(Xs_ys):
               +"\nuniqe labels: "+str(len(y_))+" \n"+str(y_))
     except:
         print ("error input of type : "+str(type(result)))
+
+def drop(T,labels=[]):
+    """ in : T : tuple with (X,y)
+                where y is lables 
+            lables : the lables to be droped
+        out : tuple (X,y) without the droped labels
+           and it's data
+    """
+    (a,b)=T
+    (X,y)=(a.copy(),b.copy())
+    for l in labels:
+        try :
+            while(l in y ):
+                i= y.index(l)
+                del(y[i]);del(X[i])
+        except:
+            continue
+    return (X,y)
