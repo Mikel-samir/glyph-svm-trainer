@@ -106,3 +106,26 @@ def drop(T,labels=[]):
         except:
             continue
     return (X,y)
+
+def pick(T,labels=[]):
+    """ in : T : tuple with (X,y)
+                where y is lables 
+            lables : the lables to be droped
+        out : tuple (X,y) with only the droped labels
+           and it's data
+    """
+    (a,b)=T
+    (X,y)=(a.copy(),b.copy())
+    (X_,y_)=([],[])
+    for l in labels:
+        try :
+            while(l in y ):
+                i= y.index(l)
+                y_.append(y[i]);X_.append(X[i])
+                del(y[i]);del(X[i])
+        except:
+            continue
+    return (X_,y_)
+
+def rename(T,lables=[]):
+    pass
