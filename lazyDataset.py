@@ -1,6 +1,7 @@
 import os
 import lazyImage as li
 import pickle
+#~ import pandas as pd
 
 #DONE : make load more os independent 
 #DONE : turn this to class with : dump , smart_load
@@ -78,6 +79,9 @@ class lazyDataset(object):
         self.images=li.Image.toXy(images)
     def __add__(self,other):
         print("not implemented yet !")
+    def asDataFrame(self):
+        return toDataFrame(self.load());
+
 def summary(Xs_ys):
     try :
       X,y=Xs_ys
@@ -129,3 +133,13 @@ def pick(T,labels=[]):
 
 def rename(T,lables=[]):
     pass
+
+def toDataFrame(T):
+    import pandas as pd
+    (X,y)=T
+    data = pd.concat(
+            [ 
+            pd.DataFrame({'label':y}),
+                pd.DataFrame(X)
+            ],axis=1)
+    return data
