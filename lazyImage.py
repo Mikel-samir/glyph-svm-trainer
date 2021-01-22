@@ -3,6 +3,7 @@ author : Michael
 
 """
 from utils import D;
+from pathlib import Path
 #~import os
 #~import re
 #~from imageio import imread, imsave
@@ -16,7 +17,7 @@ class Image(object):
     """
     def __init__(self, path,lazyness=50
             ,labeled_folders=False, func=lambda x : x ):
-        self.path=path;
+        self.path=Path(path);
         self.labeled_folders=labeled_folders;
         self.preprocess=func
         self.process();

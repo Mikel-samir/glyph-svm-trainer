@@ -1,13 +1,14 @@
 #import lazyImage
 import lazyDataset
-#ds=lazyDataset.lazyDataset(path="../../DataSet/EgyptianHieroglyphDataset/Automated/Preprocessed/",save_path="./data/random.pkl",lazy=False)
+from pathlib import Path
+
+data = Path("./data")
 ds=lazyDataset.lazyDataset(
-#        path="../../DataSet/EgyptianHieroglyphDataset/Manual/Preprocessed/",
-        save_path="./data/Automated.pkl",
-        lazy=True,
+#        path="./DataSet/Manual/Preprocessed/",
+        path='./Dataset/Manual/Preprocessed/',
+        save_path=data / 'test_.pkl',
+        lazy=False,
         dump=False
         )
 result=ds.load()
 lazyDataset.summary(result);
-s=ds+ds
-#print(ds.asDataFrame())

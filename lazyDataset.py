@@ -1,48 +1,48 @@
 import os
 import lazyImage as li
 import pickle
+from pathlib import Path
 #~ import pandas as pd
 
+## minor improves
 #DONE : make load more os independent 
 #DONE : turn this to class with : dump , smart_load
+#TODO : imporve to load recursively all images in the dir.
 #TODO : update docmuentaion
+#DONE : overload + 
+
+## major improve 
+#TODO : add handling for a list of paths or one path
 #TODO : add drop to drop lables and there data 
 #       in __strict_load__ and __lazy_load__
-#TODO : overload + 
+#TODO : overload + to work lazy   
 
 class lazyDataset(object):
     """ lazy reading of dataset set
     """
     def __init__(self
-            ,path = "/home/loxymondor/docs/facu/Gproj/Proj/DataSet/EgyptianHieroglyphDataset/ExampleSet7/train/"
-            ,seprator=os.path.sep 
+            ,path = "./Dataset/ExampleSet7/train/"
             ,labeled=False
             ,lazy=True
-            ,dump=True,save_path="./data/lazyDataset.pkl"):
-        """ __init__ (path,seprator)
-        this method assumes that each folder name is the lable of the images it contains.
-        path : is dir of dataset
-                must end with a seprator 
-                example : /home/s/d/ is right
-                          /home/s/d is wrong
-
-        seprator : is the os seprator 
-                linux -> /
-                win   -> \\
-        ## not implemented
-        save_path : file path to use to load-dump the result.
-        lazy : True  : check first if data avilable .
-               False : load and compile dataset .
+            ,dump=True,save_path=Path("./data/lazyDataset.pkl")):
+        """ lazyDataset(...)
+        in :(all optional)
+            path : images dataset path
+            labeled (bool) : if the dataset have folders named 
+                        as the label of it's contents.
+            save_path : file path to use to load-dump the result.
+            lazy : True  : check first if data avilable.
+                   False : load and compile dataset.
+            dump (bool) :to dump data to save_path or not. 
         ------
-        out : lazyImage array
+        out : use load() to get dataset as (X,y)
         """
 # check (strict) *-> load 
 #                *-> read -> dump 
-        self.path=path
-        self.seprator=seprator
+        self.path=Path(path)
         self.lazy=lazy
         self.dump=dump
-        self.save_path=save_path
+        self.save_path=Path(save_path)
         self.images=[]
 
     def load(self):
@@ -67,20 +67,24 @@ class lazyDataset(object):
         """ reads dataset strictly
         """
         images = []
-        root= os.listdir(self.path) #list of directory files
-        for label in root :
-            if os.path.isdir(self.path+label): 
-                imgs=os.listdir(self.path+label)
+        root= self.path
+        folders= os.listdir(root) #list of directory files
+        for label in folders :
+            if (root / label).is_dir() : 
+                imgs=os.listdir(root / label)
                 for img in imgs: 
                     images.append(
-                        li.Image(
-                             self.path+self.seprator
-                            +label+self.seprator+img))
+                        li.Image(root / label / img))
         self.images=li.Image.toXy(images)
-    def __add__(self,other):
-        print("not implemented yet !")
+
     def asDataFrame(self):
         return toDataFrame(self.load());
+    
+    def __add__(self,other):
+        (X,y)  = self.load()
+        (X_,y_)= other.load()
+        return (X+X_,y+y_)
+
 
 def summary(Xs_ys):
     try :
@@ -133,6 +137,8 @@ def pick(T,labels=[]):
 
 def rename(T,lables=[]):
     pass
+def Dumpto(data,fname):
+    pickle.dump(data,open(fname, 'wb'))
 
 def toDataFrame(T):
     import pandas as pd
@@ -143,3 +149,10 @@ def toDataFrame(T):
                 pd.DataFrame(X)
             ],axis=1)
     return data
+
+def concat(one=([],[]),other=([],[])):
+    (X,y)  = one
+    (X_,y_)= other
+    return (X+X_,y+y_)
+
+
