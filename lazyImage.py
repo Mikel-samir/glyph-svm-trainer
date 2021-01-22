@@ -85,11 +85,14 @@ class Image(object):
         PPS=D(image.shape,hog_patch_ratio)
         cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches
         fv = hog(image,
-                orientations=bins,cells_per_block=cells_per_block
-                ,pixels_per_cell=PPS ,block_norm='L1'
+                orientations=bins
+                ,cells_per_block=cells_per_block
+                ,pixels_per_cell=PPS 
+                ,block_norm='L1'
                 ,transform_sqrt=True)
         self.fv=fv;
         del image;
+
     @staticmethod    
     def toXy(lazyimages):#not tested yet
         X=[]
