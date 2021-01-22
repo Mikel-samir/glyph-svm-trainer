@@ -11,7 +11,7 @@ class lazyModel(object):
     """ lazy model train trainer
     """
     def __init__(self,
-            model=SVC(kernel='rbf'),
+            model=SVC(),
             dataset=None,
             save_path="./model/Main.pkl",
             lazy=True,dump=True):
@@ -84,7 +84,6 @@ class lazyModel(object):
             self.__lazy_load__()
         else :
             self.__strict_load__()
-        return self.model
 
     def __strict_load__(self):
         warnings.warn("lazy loading failed, strict loading will be used.",RuntimeWarning)
@@ -92,7 +91,7 @@ class lazyModel(object):
 
     def __lazy_load__ (self):
         try :
-            self.images=pickle.load(open(self.save_path, 'rb'))
+            self.model=pickle.load(open(self.save_path, 'rb'))
         except:
             self.__strict_load__()
 
