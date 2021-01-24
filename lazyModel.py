@@ -83,13 +83,13 @@ class lazyModel(object):
         X_train, X_test_, y_train, y_test_ = train_test_split(X, y, test_size=0.3, random_state=1);
         # 2/3 dev , 1/3 test
         X_dev, X_test , y_dev, y_test  = train_test_split(X, y, test_size=1/3, random_state=1); 
-        name=self.__name__()
+        name=self.__get_name__()
         lazyDataset.Dumpto((X_dev,y_dev),Path('./data/'+name+'.dev.pkl'))
         lazyDataset.Dumpto((X_test,y_test),Path('./data/'+name+'.test.pkl'))
         self.dataset=(X_train,y_train)
         return (X_test,y_test)
 
-    def __name__(self):
+    def __get_name__(self):
         return self.save_path.stem
 
 
