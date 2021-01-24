@@ -7,6 +7,8 @@ import warnings
 import lazyDataset
 from pathlib import Path
 
+# TODO : train with all data .
+
 class lazyModel(object):
     """ lazy model train trainer
     """
@@ -14,13 +16,15 @@ class lazyModel(object):
             model=SVC(),
             dataset=None,
             save_path="./model/Main.pkl",
-            lazy=True,dump=True):
+            lazy=True,dump=True,
+            split=False):
         """
         in : model     : model object
              dataset   : tuple or lazyDataset object.
              save_path : path to save/load model
              lazy      : 
-             dump      : 
+             dump      :
+             split     : (bool) split dataset ? 
 
         out :
         """
@@ -39,19 +43,18 @@ class lazyModel(object):
             else :
                 (X,y)=self.dataset.load();
         
-        from sklearn.model_selection import train_test_split
-        # 70% training and 30% test+dev
-        X_train, X_test_, y_train, y_test_ = train_test_split(X, y, test_size=0.3, random_state=1);
-        # 2/3 dev , 1/3 test
-        X_dev, X_test , y_dev, y_test  = train_test_split(X, y, test_size=1/3, random_state=1); 
-        lazyDataset.Dumpto((X_dev,y_dev),Path('./data/model.dev.pkl'))
-        lazyDataset.Dumpto((X_test,y_test),Path('./data/model.test.pkl'))
+
+#        if self.split == True : 
+#            (X_test,y_test)=self.__split__()
+#            ()
+        
         # training
         warnings.warn("training the model ...")
-        self.model.fit(X_train,y_train)
+        self.model.fit(X,y)
         self.__dump__()
-        warnings.warn("testting the model ...")
-        self.__test__(X_test,y_test)
+#        if self.split == True : 
+#            warnings.warn("testting the model ...")
+#            self.__test__(X_test,y_test)
 
 
     def __get_dataset__():
@@ -70,6 +73,24 @@ class lazyModel(object):
         del(datasetA);del(datasetM)
         dataset=lazyDataset.drop(dataset,labels=['UNKNOWN'])
         return dataset
+
+    def __split__(self):
+        """ split dataset to test/dev/train
+        """
+        (X,y)=self.dataset
+        from sklearn.model_selection import train_test_split
+        # 70% training and 30% test+dev
+        X_train, X_test_, y_train, y_test_ = train_test_split(X, y, test_size=0.3, random_state=1);
+        # 2/3 dev , 1/3 test
+        X_dev, X_test , y_dev, y_test  = train_test_split(X, y, test_size=1/3, random_state=1); 
+        name=self.__name__()
+        lazyDataset.Dumpto((X_dev,y_dev),Path('./data/'+name+'.dev.pkl'))
+        lazyDataset.Dumpto((X_test,y_test),Path('./data/'+name+'.test.pkl'))
+        self.dataset=(X_train,y_train)
+        return (X_test,y_test)
+
+    def __name__(self):
+        return self.save_path.stem
 
 
     def __test__(self,X,y_test):
