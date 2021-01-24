@@ -3,6 +3,7 @@ import lazyImage as li
 import pickle
 from pathlib import Path
 #~ import pandas as pd
+#~ from numpy import flip, array
 
 ## minor improves
 #DONE : make load more os independent 
@@ -155,4 +156,13 @@ def concat(one=([],[]),other=([],[])):
     (X_,y_)= other
     return (X+X_,y+y_)
 
-
+def sort_max(dataset):
+    """ sort max first 
+    """
+    from numpy import flip, array
+    (X,_)=dataset
+    X_=[]
+    for x in X :
+        i=flip(array(x).argsort())
+        X_.append(x[i])
+    return (X_,dataset[1])
