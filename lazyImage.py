@@ -7,6 +7,7 @@ from pathlib import Path
 #~import os
 #~import re
 #~from imageio import imread, imsave
+#import matplotlib.pyplot as plt
 
 #TODO impelement lazyness level to control processing
 #TODO? write method 'die' to write label to self.label then clear the path 
@@ -93,9 +94,13 @@ class Image(object):
                 ,transform_sqrt=True)
         self.fv=fv;
         del image;
-
-    @staticmethod    
-    def toXy(lazyimages):#not tested yet
+    def plot_gray(self):
+        """plot  self in gray """
+        import matplotlib.pyplot as plt
+        _ , ax1 = plt.subplots(1,1)
+        ax1.imshow(self.load(), cmap=plt.cm.gray);
+    @staticmethod   # turn into just method 
+    def toXy(lazyimages):
         X=[]
         y=[]
         for img in lazyimages:
