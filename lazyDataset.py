@@ -139,7 +139,7 @@ def pick(T,labels=[]):
 def rename(T,lables=[]):
     pass
 def Dumpto(data,fname):
-    pickle.dump(data,open(fname, 'wb'))
+    pickle.dump(data,open(Path(fname), 'wb'))
 
 def toDataFrame(T):
     import pandas as pd
