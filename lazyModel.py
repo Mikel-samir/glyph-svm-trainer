@@ -1,6 +1,5 @@
 from sklearn.svm import SVC
 import pickle
-from utils import evaluate
 import warnings
 #~ from sklearn.model_selection import train_test_split 
 #~ from lazyImage import lazyImage 
@@ -139,3 +138,12 @@ class lazyModel(object):
             pickle.dump(self.model,open(self.save_path, 'wb'))
     def dump():
         self.__dump__(lock=True)
+
+
+def evaluate(y_test,y_pred):
+    """ classification report
+    """
+    from sklearn.metrics import  accuracy_score,classification_report
+    print("classification report :")
+    print(classification_report(y_test,y_pred))
+    print("Accuracy:",accuracy_score(y_test, y_pred))
