@@ -13,15 +13,23 @@ from pathlib import Path
 #TODO? write method 'die' to write label to self.label then clear the path 
 #TODO write static method to read list of lazyImages and return (labels, feature vectors )
 # path , hog_vector [, label
+
 class Image(object):
     """lazy images
     """
-    def __init__(self, path,lazyness=50
-            ,labeled_folders=False, func=lambda x : x ):
+    def __init__(self, path,
+                lazyness=50,standard_size=(75,50),
+                labeled_folders=False, func=lambda x : x,auto_proc=True):
+        """
+           path : path to an image.
+           standard_size : size to resize to default (75,50) if None no resize
+        """
         self.path=Path(path);
         self.labeled_folders=labeled_folders;
-        self.preprocess=func
-        self.process();
+        self.standard_size=standard_size
+#        self.preprocess=func
+        if (auto_proc == True):
+            self.process();
 #        self.label=self.getlabel()
 
     def load(self):# lazy loading
@@ -70,9 +78,12 @@ class Image(object):
         from PIL import Image, ImageEnhance
         from skimage.color import rgb2gray
         import numpy as np
+        image=np.array(image)
         image=image.copy();    
         image=Image.fromarray(image); # array 2 image
-        image = image.convert('L');# 2 gray
+        image=image.convert('L');# 2 gray
+        if self.standard_size != None : 
+            image=image.resize((self.standard_size[1],self.standard_size[0])) ; # resize
         image=np.array(image);
 
 
@@ -107,3 +118,24 @@ class Image(object):
             X.append(img.fv)
             y.append(img.label())
         return (X,y)
+    @staticmethod
+    def FromObj(img):
+        out=Image("",auto_proc=False)
+        out.load=lambda : img
+        return out
+    def run(self):
+        self.process()
+        return self
+    @staticmethod
+    def FromObjs(imgList):
+        out=[]
+        for img in imgList :
+            out.append(FromObj(img))
+        return out
+    @staticmethod
+    def runAll(limgs):
+        for limg in limgs:
+            limg.run()
+        return limgs
+
+        
