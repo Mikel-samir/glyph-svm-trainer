@@ -13,7 +13,7 @@ class lazyModel(object):
     """ lazy model train trainer
     """
     def __init__(self,
-            model=SVC(),
+            model=SVC(probability=True),
             dataset=None,
             save_path="./model/Main.pkl",
             lazy=True,dump=True,
@@ -99,6 +99,24 @@ class lazyModel(object):
 
     def report(self):
         pass
+    
+    def Predict(self,glys):
+        """
+        """
+        import numpy as np
+        clf=self.model
+        X=[]
+        if type(glys) == np.ndarray and len(glys.shape) == 1 :
+            glys=[glys]
+        if type(glys) == list :
+            P=clf.predict_proba(glys)
+            for p_ in P : 
+                pm=p_.argmax()
+                X.append((clf.classes_[pm],p_[pm]))
+        return X
+    
+    def test(self,X,y):
+        self.__test__(X,y)
 
     def load(self):
         if self.lazy == True :

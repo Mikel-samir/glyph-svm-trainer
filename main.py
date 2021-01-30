@@ -5,15 +5,20 @@ from pathlib import Path
 
 data = Path("./data")
 ds=lazyDataset.lazyDataset(
-#        path="./DataSet/Manual/Preprocessed/",
-#        path='./Dataset/Manual/Preprocessed/',
         save_path=data / 'Main.pkl',
-        lazy=False,
+#        lazy=False,
         dump=False
         )
-#result=ds.load()
-#lazyDataset.summary(result);
-test= lazyDataset.lazyDataset(save_path='data/model.dev.pkl')+lazyDataset.lazyDataset(save_path='data/model.test.pkl')
-a=lazyModel.lazyModel(dataset=ds)
+X,y=ds.load()
+#lazyDataset.summary((X,y));
+a=lazyModel.lazyModel(
+#        dataset=(X,y),
+        save_path="./model/Main.proba.pkl"
+        )
 a.load()
-a.__test__(test[0],test[1])
+#test= (X[0:100],y[0:100])
+#a.__test__(test[0],test[1])
+x=200
+res=a.Predict(X[0:x])
+for i in range(x):
+    print (str(res[i][0]==y[i])+"\t"+str(res[i])+"\t"+str(y[i]))
