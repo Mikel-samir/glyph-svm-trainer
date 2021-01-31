@@ -1,20 +1,28 @@
 # svm-trainer
 ## Dependencies
-
-* **imageio**
+### Python packages
+all of them comes with anaconda installer.
+* [**imageio**](https://anaconda.org/menpo/imageio)
+* [**pillow**](https://anaconda.org/anaconda/pillow)
 * pickle
 * pandas
 * numpy
-* pillow 
 * sklearn
 * skimage
-* matplotlib.pyplot
+* matplotlib
+
+### directory hierarchy
+
+* model
+    * [**Main.pkl**]() | the svm model
+* data
+    * Main.pkl | the data set in case of need for training 
 
 ## how to use ?
 1. load a model
 2. prepare image(s)
 	1. load image from path
-	2. load image from (numpy array / PIL.Image / ..) 
+	2. load image from object image (numpy array / PIL.Image / ..) 
 3. predict the image(s)'s label
 
 ### load a model 
@@ -36,10 +44,10 @@ model.load()
 
 ```python
 import lazyImage as li
-image=li.Image("path/to/image.jpg")
+image=li.toXy(li.Image("path/to/image.jpg"))
 ```
 
-#### load image from (numpy array / PIL.Image / ..) 
+#### load image from object image (numpy array / PIL.Image / ..) 
 
 ```python
 import lazyImage as li
@@ -49,12 +57,12 @@ import lazyImage as li
 image=li.Image.FromObj(img).run()
 
 # images
+# assuming imgs is list
 images=li.Image.FromObjs(imgs)
-images=li.Image.runAll()
+images=li.Image.runAll(images)
 ```
 
 ### predict the image(s)'s label
-
 
 ```python
 result=model.Predict(image)
@@ -62,5 +70,11 @@ result=model.Predict(image)
 # p -> probability 
 # ('label',p)
 results=model.Predict(images)
-
+# output : 
+# [(l,p),(l,p),...]
 ```
+
+#### what's next ? 
+
+
+**see : demo.py**
