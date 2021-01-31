@@ -3,6 +3,7 @@
 ## Dependencies
   ### Python packages
   all of them comes with anaconda installer.
+  * **python3**
   * [**imageio**](https://anaconda.org/menpo/imageio)
   * [**pillow**](https://anaconda.org/anaconda/pillow)
   * pickle
