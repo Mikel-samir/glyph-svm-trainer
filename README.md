@@ -1,3 +1,5 @@
+# svm-trainer
+
 ## Dependencies
   ### Python packages
   all of them comes with anaconda installer.
@@ -16,9 +18,13 @@
       * **Main.proba.pkl**
   * data
       * Main.pkl | the data set in case of need for training
+## how to install
 
+if u use anaconda make sure to be using python from anaconda (not the system python)
+```bash
+python setup.py install
+```
 
-# svm-trainer
 ## how to use ?
 1. load a model
 2. prepare image(s)
@@ -30,7 +36,7 @@
 ### load a model 
 load a compiled model from model file.
 
-**Note:** remember to change path to windows version with \ instead of /
+**Note:** remember to change path to windows/Mac version with \ instead of / or use pathlib.Path
 
 
 ```python
