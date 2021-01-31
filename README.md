@@ -61,12 +61,10 @@ from skimage import data
 import lazyImage as li
 # example image in a numpy array 
 img = data.astronaut()
-# plotting
-li.Image.FromObj(img).run().plot_gray()
 ```
 
 
-![png](https://i.imgur.com/OoYfutH.png)
+>> ![png](https://i.imgur.com/OoYfutH.png)
 
 
 
@@ -95,7 +93,7 @@ model.Predict(image)
 
 
 
-    [('D35', 0.3216917080504977)]
+    out : [('D35', 0.3216917080504977)]
 
 
 
@@ -103,8 +101,8 @@ model.Predict(image)
 ```python
 model.Predict(images)
 ```
-    [('F31', 0.03261634682111355),
-     ('F31', 0.03261634682111355),
-     ('F31', 0.03261634682111355)]
+    out:   [('F31', 0.03261634682111355),
+          ('F31', 0.03261634682111355),
+          ('F31', 0.03261634682111355)]
 
 
