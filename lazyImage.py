@@ -117,8 +117,13 @@ class Image(object):
             X.append(img.fv)
             y.append(img.label())
         return (X,y)
+    
+    def toX(self):
+        return toX([self])[0]
     @staticmethod
     def FromObj(img):
+        """ turns numpy/Image image into lazyImage
+        """
         out=Image("",auto_proc=False)
         out.load=lambda : img
         return out
@@ -127,15 +132,23 @@ class Image(object):
         return self
     @staticmethod
     def FromObjs(imgList):
+        """ turns numpy/Image images into lazyImage list
+        """
         out=[]
         for img in imgList :
-            out.append(FromObj(img))
+            out.append(Image.FromObj(img))
         return out
     @staticmethod
     def runAll(limgs):
         for limg in limgs:
             limg.run()
         return limgs
+
+def toX(lazyimages):
+    X=[]
+    for img in lazyimages:
+        X.append(img.fv)
+    return X
 
 def D(I , N ): 
         """ get no. of pixels to divide image with size I <tuple> to N[0]xN[1] <tuple> 
