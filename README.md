@@ -13,7 +13,7 @@
   ### directory hierarchy
 
   * model
-      * [**Main.pkl**]() | the svm model
+      * [**Main.pkl**](https://drive.google.com/file/d/1ISCgNbj8F-lXHeVAF1LYiTLNcvvO4p9G/view?usp=sharing) | the svm model
   * data
       * Main.pkl | the data set in case of need for training
 
