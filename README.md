@@ -13,7 +13,7 @@
   ### directory hierarchy
 
   * model
-      * [**Main.pkl**](https://drive.google.com/file/d/1ISCgNbj8F-lXHeVAF1LYiTLNcvvO4p9G/view?usp=sharing) | the svm model
+      * **Main.proba.pkl**
   * data
       * Main.pkl | the data set in case of need for training
 
@@ -36,7 +36,7 @@ load a compiled model from model file.
 ```python
 import lazyModel
 model=lazyModel.lazyModel(
-        save_path="./model/Main.pkl"
+        save_path="./model/Main.proba.pkl"
         )
 model.load()
 
