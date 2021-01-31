@@ -104,7 +104,7 @@ model.Predict(image)
 
 
 
-
+**Note :**  it's prefered to predict multiple images at once it takes a close time to predicting one. 
 ```python
 model.Predict(images)
 ```
