@@ -64,7 +64,7 @@ img = data.astronaut()
 ```
 
 
->> ![png](https://i.imgur.com/OoYfutH.png)
+   ![png](https://i.imgur.com/OoYfutH.png)
 
 
 
