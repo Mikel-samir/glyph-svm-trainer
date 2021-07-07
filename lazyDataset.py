@@ -25,7 +25,8 @@ class lazyDataset(object):
             ,path = "./Dataset/ExampleSet7/train/"
             ,labeled=False
             ,lazy=True
-            ,dump=True,save_path=Path("./data/lazyDataset.pkl")):
+            ,dump=True,save_path=Path("./data/lazyDataset.pkl")
+            ,img_class=li.Image):
         """ lazyDataset(...)
         in :(all optional)
             path : images dataset path
@@ -45,6 +46,7 @@ class lazyDataset(object):
         self.dump=dump
         self.save_path=Path(save_path)
         self.images=[]
+        self.img_class=img_class
 
     def load(self):
         if self.lazy == True :
@@ -75,8 +77,8 @@ class lazyDataset(object):
                 imgs=os.listdir(root / label)
                 for img in imgs: 
                     images.append(
-                        li.Image(root / label / img))
-        self.images=li.Image.toXy(images)
+                        self.img_class(root / label / img))
+        self.images=self.img_class.toXy(images)
 
     def asDataFrame(self):
         return toDataFrame(self.load());
