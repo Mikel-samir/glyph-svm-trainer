@@ -90,11 +90,15 @@ class Image(object):
         from skimage.feature import canny
         image=canny(image,sigma=2);
         # HOG
+        # shape (75,50)
+        #  [3, 5, 5]
+        #  [2, 5, 5]
+        
         from skimage.feature import hog
         bins=8;
         hpr=10; 
-        hog_patch_ratio=(hpr,hpr)
-        PPS=D(image.shape,hog_patch_ratio)
+        hog_patch_ratio=(hpr,hpr);
+        PPS=D(image.shape,hog_patch_ratio);# (7.5,5)
         cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches
         fv = hog(image,
                 orientations=bins
