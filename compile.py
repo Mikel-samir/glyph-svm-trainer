@@ -2,35 +2,55 @@
 import lazyDataset
 import lazyModel
 from pathlib import Path
+"""
+# Generates the Dataset & the Model
+
+* Dataset root directory in same dir and named `Dataset`
+* compiled dataset will be generated in ./data/ dir
+* saves model in ./model/ dir
+
+"""
+safety_lock=True;# to stop strict loading if true
 
 data = Path("./data")
+# Manual
 dsM=lazyDataset.lazyDataset(
         path="./Dataset/Manual/Raw/" ,
         save_path=data / 'Manual.Raw.pkl',
+        lazy=safety_lock
         )
+
+# Automated
 dsA=lazyDataset.lazyDataset(
         path="./Dataset/Automated/Raw/" ,
         save_path=data / 'Manual.Raw.pkl',
+        lazy=safety_lock
         )
-#lazyDataset.summary((X,y));
-a=lazyModel.lazyModel(
-#        dataset=(X,y),
-        save_path="./model/Main.proba.pkl"
-        )
-a.load()
 
+# All Dataset
 test=dsA+dsM
 lazyDataset.Dumpto(test,'./data/All.Raw.pkl')
 print("pure:\n")
 lazyDataset.summary(test)
+
+# filtered Dataset
 test=lazyDataset.drop(test,labels=['UNKNOWN'])
 lazyDataset.Dumpto(test,'./data/Main.Raw.pkl')
 print("filtered:\n")
 lazyDataset.summary(test)
+
+
+# Model
+## training
 X,y=test
+a=lazyModel.lazyModel(
+        dataset=(X,y),
+        save_path="./model/Main.proba.pkl"
+        ,lazy=safety_lock
+        )
+a.load()
+## testing
 a.__test__(X,y)
 
-#x=200
-#res=a.Predict(X[0:x])
-#for i in range(x):
-#    print (str(res[i][0]==y[i])+"\t"+str(res[i])+"\t"+str(y[i]))
+
+
