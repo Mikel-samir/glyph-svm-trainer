@@ -12,30 +12,34 @@ from pathlib import Path
 """
 safety_lock=True;# to stop strict loading if true
 
-data = Path("./data")
+data = Path("./data/")
+dataset = Path("./Dataset")
+model = Path("./model/")
+ext='.canny'
+
 # Manual
 dsM=lazyDataset.lazyDataset(
-        path="./Dataset/Manual/Raw/" ,
-        save_path=data / 'Manual.Raw.pkl',
+        path= dataset /"Manual"/"Raw" ,
+        save_path=data / str('Manual.Raw'+ext+'.pkl'),
         lazy=safety_lock
         )
 
 # Automated
 dsA=lazyDataset.lazyDataset(
-        path="./Dataset/Automated/Raw/" ,
-        save_path=data / 'Manual.Raw.pkl',
+        path= dataset /"Automated"/"Raw" ,
+        save_path=data / str('Automated.Raw'+ext+'.pkl'),
         lazy=safety_lock
         )
 
 # All Dataset
 test=dsA+dsM
-lazyDataset.Dumpto(test,'./data/All.Raw.pkl')
+lazyDataset.Dumpto(test,data /str('All.Raw'+ext+'.pkl'))
 print("pure:\n")
 lazyDataset.summary(test)
 
 # filtered Dataset
 test=lazyDataset.drop(test,labels=['UNKNOWN'])
-lazyDataset.Dumpto(test,'./data/Main.Raw.pkl')
+lazyDataset.Dumpto(test,data / str('Main'+ext+'.pkl'))
 print("filtered:\n")
 lazyDataset.summary(test)
 
@@ -45,7 +49,7 @@ lazyDataset.summary(test)
 X,y=test
 a=lazyModel.lazyModel(
         dataset=(X,y),
-        save_path="./model/Main.proba.pkl"
+        save_path= model / str('Main.proba'+ext+'.pkl')
         ,lazy=safety_lock
         )
 a.load()
