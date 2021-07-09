@@ -19,21 +19,21 @@ ext=''
 
 # Manual
 dsM=lazyDataset.lazyDataset(
-        path= dataset /"Manual"/"Raw" ,
+        path= dataset /"Manual"/"Preprocessed" ,
         save_path=data / str('Manual.Raw'+ext+'.pkl'),
         lazy=safety_lock
         )
 
 # Automated
 dsA=lazyDataset.lazyDataset(
-        path= dataset /"Automated"/"Raw" ,
+        path= dataset /"Automated"/"Preprocessed" ,
         save_path=data / str('Automated.Raw'+ext+'.pkl'),
         lazy=safety_lock
         )
 
 # All Dataset
 test=dsA+dsM
-lazyDataset.Dumpto(test,data /str('All.Raw'+ext+'.pkl'))
+lazyDataset.Dumpto(test,data /str('All'+ext+'.pkl'))
 print("pure:\n")
 lazyDataset.summary(test)
 
