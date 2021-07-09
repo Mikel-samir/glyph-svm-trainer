@@ -15,7 +15,7 @@ safety_lock=True;# to stop strict loading if true
 data = Path("./data/")
 dataset = Path("./Dataset")
 model = Path("./model/")
-ext='.canny'
+ext=''
 
 # Manual
 dsM=lazyDataset.lazyDataset(
