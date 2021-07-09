@@ -2,6 +2,7 @@
 import lazyDataset
 import lazyModel
 from pathlib import Path
+import argparse
 """
 # Generates the Dataset & the Model
 
@@ -10,24 +11,37 @@ from pathlib import Path
 * saves model in ./model/ dir
 
 """
-safety_lock=True;# to stop strict loading if true
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-S"
+                    ,"--not-safe"
+                    , help="set the safety_lock to off to do strict loading."
+                    ,action="store_false")
+parser.add_argument("-e"
+                    ,"--ext"
+                    ,help="set an extension."
+                    ,type=str,nargs=1,default=[""])
+args = parser.parse_args()
+
+
+safety_lock=args.not_safe;# to stop strict loading if true
 
 data = Path("./data/")
 dataset = Path("./Dataset")
 model = Path("./model/")
-ext=''
+ext=args.ext[0]
 
 # Manual
 dsM=lazyDataset.lazyDataset(
         path= dataset /"Manual"/"Preprocessed" ,
-        save_path=data / str('Manual.Raw'+ext+'.pkl'),
+        save_path=data / str('Manual'+ext+'.pkl'),
         lazy=safety_lock
         )
 
 # Automated
 dsA=lazyDataset.lazyDataset(
         path= dataset /"Automated"/"Preprocessed" ,
-        save_path=data / str('Automated.Raw'+ext+'.pkl'),
+        save_path=data / str('Automated'+ext+'.pkl'),
         lazy=safety_lock
         )
 
