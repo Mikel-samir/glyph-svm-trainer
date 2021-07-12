@@ -23,7 +23,7 @@ class lazyModel(object):
              save_path : path to save/load model
              lazy      : 
              dump      :
-             split     : (bool) split dataset ? 
+             split     : (bool) split dataset ?(disabled) 
 
         out :
         """
@@ -55,6 +55,9 @@ class lazyModel(object):
 #            warnings.warn("testting the model ...")
 #            self.__test__(X_test,y_test)
 
+    def train(self,Xy):
+        self.dataset=Xy
+        self.__train__()
 
     def __get_dataset__():
         ## preparing paths
@@ -72,8 +75,8 @@ class lazyModel(object):
         del(datasetA);del(datasetM)
         dataset=lazyDataset.drop(dataset,labels=['UNKNOWN'])
         return dataset
-
-    def __split__(self):
+    
+    def __split_td__(self):
         """ split dataset to test/dev/train
         """
         (X,y)=self.dataset
@@ -116,6 +119,10 @@ class lazyModel(object):
     
     def test(self,X,y):
         self.__test__(X,y)
+    
+    def test(self,Xy):
+        self.__test__(Xy[0],Xy[1])
+
 
     def load(self):
         if self.lazy == True :
@@ -138,6 +145,21 @@ class lazyModel(object):
             pickle.dump(self.model,open(self.save_path, 'wb'))
     def dump():
         self.__dump__(lock=True)
+
+def split (Xy,test_size=0.3):
+    """spilt a given dataset
+        in: 
+         Xy : (X,y) dataset
+         test_size :
+    """
+    (X,y)=Xy
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=1);
+    Xy_train =(X_train,y_train)
+    Xy_test =(X_test,y_test)
+    return (Xy_train,Xy_test)
+
+
 
 
 def evaluate(y_test,y_pred):
