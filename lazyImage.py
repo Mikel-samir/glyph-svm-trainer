@@ -58,11 +58,19 @@ class Image(object):
         import re;
         match=re.match(r'.*_(.*)\..*',file_name)
         if ( self.labeled_folders == True ) :
-            return folder_name;
-        elif (match == None):
-            return folder_name;
-        else :
+            # folder name
+            return folder_name
+        elif (not(self.labeled_folders) and (match!=None)) :
+            # label
             return match.group(1);
+        elif (not(self.labeled_folders)) :
+            # name without extension
+            return re.match(r'(.*)\..*',file_name).group(1)
+        elif (not(self.labeled_folders)):
+            # all file name not used yet
+            return file_name
+        else:
+            return folder_name
 
     def process(self):
         """process image with canny edge & hog
@@ -72,7 +80,6 @@ class Image(object):
         image = self.load();
 
         # preprocess
-#        image = self.preprocess(image);
         # to gray ## move to seperate method
         from PIL import Image, ImageEnhance
         from skimage.color import rgb2gray
@@ -86,9 +93,10 @@ class Image(object):
         image=np.array(image);
 
 
-        # canny
-        from skimage.feature import canny
-        image=canny(image,sigma=2);
+        # 
+        from skimage.filters import sobel
+        image=sobel(image);
+
         # HOG
         # shape (75,50)
         #  [3, 5, 5]
@@ -106,13 +114,16 @@ class Image(object):
                 ,pixels_per_cell=PPS 
                 ,block_norm='L1'
                 ,transform_sqrt=True)
+        
         self.fv=fv;
         del image;
+
     def plot_gray(self):
         """plot  self in gray """
         import matplotlib.pyplot as plt
         _ , ax1 = plt.subplots(1,1)
         ax1.imshow(self.load(), cmap=plt.cm.gray);
+    
     @staticmethod   # turn into just method 
     def toXy(lazyimages):
         X=[]
@@ -124,6 +135,7 @@ class Image(object):
     
     def toX(self):
         return toX([self])[0]
+    
     @staticmethod
     def FromObj(img):
         """ turns numpy/Image image into lazyImage
