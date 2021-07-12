@@ -47,6 +47,7 @@ class lazyDataset(object):
         self.save_path=Path(save_path)
         self.images=[]
         self.img_class=img_class
+        self.labeled=labeled
 
     def load(self):
         if self.lazy == True :
@@ -69,16 +70,30 @@ class lazyDataset(object):
     def __strict_load__(self):
         """ reads dataset strictly
         """
-        images = []
+        images = ([],[])
         root= self.path
-        folders= os.listdir(root) #list of directory files
+        folders= sorted_alphanumeric(os.listdir(root)) #list of directory files
         for label in folders :
             if (root / label).is_dir() : 
-                imgs=os.listdir(root / label)
-                for img in imgs: 
-                    images.append(
-                        self.img_class(root / label / img))
-        self.images=self.img_class.toXy(images)
+                Xy=self.scan(root / label)
+                images=self.appendXy(images,Xy)
+        self.images=images
+
+    @staticmethod
+    def appendXy(Xy1,Xy2):
+        X=Xy1[0]+Xy2[0]
+        y=Xy1[1]+Xy2[1]
+        return (X,y)
+
+    def scan(self,path):
+        path=Path(path)
+        imgs=sorted_alphanumeric(os.listdir(path))
+        images=[]
+        for img in imgs: 
+            images.append(
+                self.img_class( path / img,labeled_folders=self.labeled))
+        return self.img_class.toXy(images)
+
 
     def asDataFrame(self):
         return toDataFrame(self.load());
@@ -168,3 +183,16 @@ def sort_max(dataset):
         i=flip(array(x).argsort())
         X_.append(x[i])
     return (X_,dataset[1])
+
+def sorted_alphanumeric(data):
+    """
+    i/p : data array of strings
+    function to sort input in alphanum way 
+    to be used in sorting files in write order.
+    source : https://stackoverflow.com/a/48030307
+    """
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanumkey = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(data, key=alphanumkey)
+
