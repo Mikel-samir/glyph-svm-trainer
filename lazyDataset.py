@@ -104,14 +104,21 @@ class lazyDataset(object):
         return (X+X_,y+y_)
 
 
-def summary(Xs_ys):
+def summary(dataset,long=True):
+    """
+        dataset summary
+        in: 
+        dataset : (X,y)
+        long : (bool) show set of labels
+    """
     try :
-      X,y=Xs_ys
+      X,y=dataset
       y_=set(y)
-      print ( "Summary :\n"
-                  +"data : "+str(len(X))
-              +"\t labels: "+str(len(y))
-              +"\nuniqe labels: "+str(len(y_))+" \n"+str(y_))
+      print ( "Summary :"
+#                  +"\tdata : "+str(len(X))
+              +" images : "+str(len(y))
+              +"\t uniqe labels: "+str(len(y_)))
+      if long : print(str(y_))
     except:
         print ("error input of type : "+str(type(result)))
 
