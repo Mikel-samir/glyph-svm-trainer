@@ -4,7 +4,6 @@ import lazyModel
 from pathlib import Path
 import argparse
 
-from lazyModel import Timer
 import time
 """
 # Generates the Dataset & the Model
