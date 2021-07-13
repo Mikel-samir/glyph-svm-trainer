@@ -45,8 +45,11 @@ ext=args.ext[0]
 data = Path("./data/")
 dataset = Path("./Dataset")
 model = Path("./model/")
-mkdir (data)
-mkdir (model)
+try :
+    mkdir (data)
+    mkdir (model)
+except:
+    pass
 #folder="Preprocessed"
 folder="Raw"
 
