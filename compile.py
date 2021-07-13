@@ -3,7 +3,7 @@ import lazyDataset
 import lazyModel
 from pathlib import Path
 import argparse
-
+from os import mkdir
 import time
 """
 # Generates the Dataset & the Model
@@ -45,6 +45,8 @@ ext=args.ext[0]
 data = Path("./data/")
 dataset = Path("./Dataset")
 model = Path("./model/")
+mkdir (data)
+mkdir (model)
 #folder="Preprocessed"
 folder="Raw"
 
