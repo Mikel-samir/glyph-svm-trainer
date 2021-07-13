@@ -73,7 +73,7 @@ class Image(object):
             return folder_name
 
     def process(self):
-        """process image with canny edge & hog
+        """process image with edge detection & hog
             and store value in self.fv
         """
         #init 

@@ -169,3 +169,22 @@ def evaluate(y_test,y_pred):
     print("classification report :")
     print(classification_report(y_test,y_pred))
     print("Accuracy:",accuracy_score(y_test, y_pred))
+
+
+
+class Timer(object):
+    def __init__(self):
+        self.start_time=0
+        self.end=0
+        self.diff=0
+
+    def start(self):
+        from time import monotonic
+        self.start_time=monotonic()
+
+    def end(self):
+        from time import monotonic
+        self.end_time=monotonic()
+        self.diff=(self.end_time)-(self.start_time)
+
+
