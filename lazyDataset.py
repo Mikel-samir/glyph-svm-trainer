@@ -70,15 +70,10 @@ class lazyDataset(object):
     def __strict_load__(self):
         """ reads dataset strictly
         """
-        images = ([],[])
-        root= self.path
-        folders= sorted_alphanumeric(os.listdir(root)) #list of directory files
-        for label in folders :
-            if (root / label).is_dir() : 
-                Xy=self.scan(root / label)
-                images=concat(images,Xy)
-        self.images=images
-
+        return scan(
+            self.path
+            ,img_class=self.img_class
+            ,labeled=self.labeled)
     @staticmethod
     def appendXy(Xy1,Xy2):
         X=Xy1[0]+Xy2[0]
@@ -86,13 +81,10 @@ class lazyDataset(object):
         return (X,y)
 
     def scan(self,path):
-        path=Path(path)
-        imgs=sorted_alphanumeric(os.listdir(path))
-        images=[]
-        for img in imgs: 
-            images.append(
-                self.img_class( path / img,labeled_folders=self.labeled))
-        return self.img_class.toXy(images)
+        return scan(
+             path
+            ,img_class=self.img_class
+            ,labeled=self.labeled)
 
 
     def asDataFrame(self):
@@ -121,6 +113,8 @@ def summary(dataset,long=True):
       if long : print(str(y_))
     except:
         print ("error input of type : "+str(type(result)))
+
+
 
 def pickdrop(T,labels=[]):
     """ in : T : tuple with (X,y)
@@ -184,6 +178,7 @@ def pick(T,labels=[]):
 
 def rename(T,lables=[]):
     pass
+
 def Dumpto(data,fname):
     pickle.dump(data,open(Path(fname), 'wb'))
 
@@ -224,4 +219,69 @@ def sorted_alphanumeric(data):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanumkey = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
     return sorted(data, key=alphanumkey)
+
+
+def safesucc(A,step=-1):
+    """ safe sum and default behavoir is to get suc
+        A : number
+        step : default -1
+        result is A if there is error raised from A+step 
+    """
+    try :
+        return A + step
+    except:
+        return A
+
+
+
+def scan(paths,img_class=li.Image,labeled=False
+        ,recursive=True,depth=None
+        ,sort_func=sorted_alphanumeric):
+    """
+        scans folder recursively
+        in : 
+        path : (path/list of paths) to an (image/folder contains images)
+        recursive : recursively read 
+        depth : level of depth 
+                +ve int 
+
+    """
+    
+    Xys=([],[])
+    
+    if ( type(paths) == list):
+        # how to solve the doublecation 
+        for path in paths :
+            Xy= scan(path,
+                        img_class=img_class,labeled=labeled
+                        ,recursive=recursive,depth=depth,sort_func=sort_func)
+            Xys=concat(Xys,Xy)
+        return Xys
+    images=[]
+
+    path=Path(paths)
+    try: 
+        files=sort_func(os.listdir(path))
+    except NotADirectoryError:
+        files=[""]# path is an img already
+
+    for file in files: 
+        # file is a dir
+        if ((path / file).is_dir() and recursive and (depth != 0)) : 
+                Xy= scan(path / file,
+                        img_class=img_class,labeled=labeled
+                        ,recursive=recursive,depth=safesucc(depth),sort_func=sort_func)
+                Xys=concat(Xys,Xy)
+        # file is file 
+        else:    
+            try :
+                # file is readable img
+                images.append(
+                    img_class( path / file,labeled_folders=labeled))
+            except ValueError:
+                # otherwise
+                pass
+    Xys=concat(Xys , img_class.toXy(images))
+    return Xys
+
 
