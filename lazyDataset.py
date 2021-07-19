@@ -70,7 +70,7 @@ class lazyDataset(object):
     def __strict_load__(self):
         """ reads dataset strictly
         """
-        return scan(
+        self.images = scan(
             self.path
             ,img_class=self.img_class
             ,labeled=self.labeled)
@@ -175,6 +175,20 @@ def pick(T,labels=[]):
         except:
             continue
     return (X_,y_)
+
+def head_i(T,start=0,i=5):
+    """ in : T : tuple with (X,y)
+                where y is lables 
+    """
+    (a,b)=T
+    (X,y)=(a.copy(),b.copy())
+    (X_,y_)=([],[])
+    for n in range(start,i):
+        y_.append(y[n]);X_.append(X[n])
+        del(y[n]);del(X[n])
+    return ((X_,y_),(X,y))
+
+
 
 def rename(T,lables=[]):
     pass
