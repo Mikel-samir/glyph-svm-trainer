@@ -59,7 +59,10 @@ class lazyModel(object):
         self.dataset=Xy
         self.__train__()
 
+    @staticmethod
     def __get_dataset__():
+        raise(ValueError("no dataset is given"))
+        warnings.warn("Dataset lazy loading failed, strict loading will be used.",RuntimeWarning)
         ## preparing paths
         datapath=Path("./data/")
         Mpath=datapath / "Manual.pkl"
@@ -160,31 +163,81 @@ def split (Xy,test_size=0.3):
     return (Xy_train,Xy_test)
 
 
+def faire_split(Xy,size=0.3,limit=5):
+    """ split & take into considration that test data is in train data
+        limit : +ve or -ve for infinite
+    """
+    from math import ceil
+    expected_size=ceil(len(Xy[0])*size)
+    yb=[]
+    rest=([],[])
+    test=rest
+    train=Xy
+    while((len(yb)<=expected_size) and (limit > 0)):
+        train,test_=split(train)
+        test=lazyDataset.concat(test,test_)
+        # picking labels that's in the dataset
+        _,ya=train
+        _,yb=test
+        yi=set(yb).intersection(ya)
+        test,R=lazyDataset.pickdrop(test,labels=list(yi))
+        rest=lazyDataset.concat(rest,R)
+        limit-=1
+    train=lazyDataset.concat(train,rest)
+    d=len(test[0])-expected_size
+    if (d > 0):
+        train_,test=lazyDataset.head_i(test,i=d)
+        train=lazyDataset.concat(train,train_)
+
+    # test is so big ?
+    return (train,test)
 
 
 def evaluate(y_test,y_pred):
     """ classification report
     """
-    from sklearn.metrics import  accuracy_score,classification_report
+    from sklearn.metrics import  accuracy_score,classification_report,log_loss
     print("classification report :")
     print(classification_report(y_test,y_pred))
     print("Accuracy:",accuracy_score(y_test, y_pred))
+#    print("logloss:",log_loss(y_test, y_pred))
 
+
+from typing import List , Tuple,Any
+Predictions=List[Tuple[str,Any]]
+
+def print_pred(pred: Predictions) -> str:
+    out=[]
+    for i in pred :
+        out.append(i[0])
+    return ",".join(out)
+
+def parse_pred(String: str,holder=0.5) -> Predictions :
+    import re
+    match=re.findall(r'((Aa|Ff|N[UL]|[A-Z])\d{1,4})',String)
+    out=[]
+    for m in match:
+            out.append((m[0],holder))
+    return out
 
 
 class Timer(object):
     def __init__(self):
+        """
+            time in milli second
+        """
+        from time import monotonic,monotonic_ns
         self.start_time=0
-        self.end=0
+        self.end_time=0
         self.diff=0
+        self.clock=monotonic_ns 
+
 
     def start(self):
-        from time import monotonic
-        self.start_time=monotonic()
+        self.start_time=self.clock()
 
     def end(self):
-        from time import monotonic
-        self.end_time=monotonic()
-        self.diff=(self.end_time)-(self.start_time)
+        self.end_time=self.clock()
+        self.diff=((self.end_time)-(self.start_time))*(10**-6)
 
 

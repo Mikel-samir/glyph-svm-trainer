@@ -5,6 +5,8 @@ from pathlib import Path
 import argparse
 from os import mkdir
 import time
+
+# refactor with `Timer`
 """
 # Generates the Dataset & the Model
 
@@ -88,13 +90,8 @@ lazyDataset.summary(ds,long=False)
 # Model
 ## training
 if testing_lock :
-    train,test=lazyModel.split(ds)
-    # picking labels that's in the dataset
-    _,ya=train
-    _,yb=test
-    yi=set(yb).intersection(ya)
-    test,rest=lazyDataset.pickdrop(test,labels=list(yi))
-    ds=lazyDataset.concat(ds,rest)
+    train,test=lazyModel.faire_split(ds)
+    print("testing ratio : " +str(len(test[0])/len(ds[0])))
 
     
 
