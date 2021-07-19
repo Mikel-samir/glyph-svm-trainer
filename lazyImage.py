@@ -17,7 +17,9 @@ class Image(object):
     """lazy images
     """
     def __init__(self, path,
-                lazyness=50,standard_size=(75,50),
+                lazyness=50,
+                standard_size=(50,50),
+#                standard_size=(75,50),
                 labeled_folders=False, func=lambda x : x,auto_proc=True):
         """
            path : path to an image.
@@ -104,10 +106,18 @@ class Image(object):
         
         from skimage.feature import hog
         bins=8;
+#        hpr=5; 
+#        hog_patch_ratio=(hpr,hpr);
+#        PPS=D(image.shape,hog_patch_ratio);# (7.5,5)
+#        cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches*100 aka one block
+        
         hpr=10; 
         hog_patch_ratio=(hpr,hpr);
         PPS=D(image.shape,hog_patch_ratio);# (7.5,5)
-        cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches
+        cells_per_block=(hpr,hpr);# 1 block
+       
+
+
         fv = hog(image,
                 orientations=bins
                 ,cells_per_block=cells_per_block
