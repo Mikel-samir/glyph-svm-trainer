@@ -95,7 +95,9 @@ if testing_lock :
 
     
 
+from sklearn.svm import SVC
 a=lazyModel.lazyModel(
+        model=SVC(probability=True,C=50),
         dataset=ds,
         save_path= model / str('Main.proba'+ext+'.pkl')
         ,lazy=(safety_lock and model_safety_lock)

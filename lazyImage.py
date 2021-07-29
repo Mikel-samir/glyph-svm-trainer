@@ -82,6 +82,8 @@ class Image(object):
         image = self.load();
 
         # preprocess
+        
+
         # to gray ## move to seperate method
         from PIL import Image, ImageEnhance
         from skimage.color import rgb2gray
@@ -92,26 +94,45 @@ class Image(object):
         image=image.convert('L');# 2 gray
         if self.standard_size != None : 
             image=image.resize((self.standard_size[1],self.standard_size[0])) ; # resize
+        
+#        image=image.resize((
+#            round_to_multi(image.size[0],hpr),
+#            round_to_multi(image.size[1],hpr)  )); # resize
+
         image=np.array(image);
 
 
-        # 
+        # edge 
         from skimage.filters import sobel
         image=sobel(image);
+
+        
+        
+        # enhancment
+        from skimage.filters import threshold_otsu
+        from skimage.morphology import remove_small_holes,remove_small_objects
+
+        t=threshold_otsu(image)
+        image=image>t
+
+        # object
+#        image=remove_small_holes(image)
+#        image=remove_small_objects(image)
 
         # HOG
         # shape (75,50)
         #  [3, 5, 5]
         #  [2, 5, 5]
-        
+                
         from skimage.feature import hog
+        
+        hpr=10;#HOG 
         bins=8;
 #        hpr=5; 
 #        hog_patch_ratio=(hpr,hpr);
 #        PPS=D(image.shape,hog_patch_ratio);# (7.5,5)
 #        cells_per_block=hog_patch_ratio;# to produce number of bins equal to patches*100 aka one block
         
-        hpr=10; 
         hog_patch_ratio=(hpr,hpr);
         PPS=D(image.shape,hog_patch_ratio);# (7.5,5)
         cells_per_block=(hpr,hpr);# 1 block
@@ -181,3 +202,7 @@ def D(I , N ):
             @unsafe  : produce float no.
         """ 
         return (I[0]/N[0],I[1]/N[1])
+
+def round_to_multi(a:int,b:int=10)-> int:
+    if a < b : return b
+    return round(a/b)*b

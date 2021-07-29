@@ -206,6 +206,16 @@ def toDataFrame(T):
             ],axis=1)
     return data
 
+def getDataFrameCountSorted(T):
+    import pandas as pd
+    Z=toDataFrame(T)
+    Z=Z[['label',0]]
+    Z=Z.groupby("label").count()[0]
+    Z=pd.DataFrame(Z)
+    Z.rename(columns={0:"count"},inplace=True)
+    Z=Z.sort_values("count")
+    return Z
+
 def concat(one=([],[]),other=([],[])):
     (X,y)  = one
     (X_,y_)= other
